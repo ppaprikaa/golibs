@@ -32,7 +32,7 @@ func MatchesRX(s string, rx *regexp.Regexp) bool {
 	return rx.MatchString(s)
 }
 
-func Has[T comparable](list []T, val T) bool {
+func HasListVal[T comparable](list []T, val T) bool {
 
 	for _, v := range list {
 		if v == val {
