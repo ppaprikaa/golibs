@@ -137,7 +137,11 @@ func (w *wrappedError) Error() string {
 }
 
 func (w *wrappedError) Unwrap() error {
-	return w.inner
+	if w.inner != nil {
+		return w.inner
+	}
+
+	return w.outer
 }
 
 func New(s string) error {
