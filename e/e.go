@@ -121,9 +121,27 @@ type wrappedError struct {
 }
 
 func (w *wrappedError) Error() string {
-	return fmt.Sprintf("%v: %v", w.outer, w.inner)
+	if w.outer != nil && w.inner != nil {
+		return fmt.Sprintf("%s: %s", w.outer.Error(), w.inner.Error())
+	}
+
+	if w.outer != nil {
+		return w.outer.Error()
+	}
+
+	if w.inner != nil {
+		return w.inner.Error()
+	}
+
+	return ""
 }
 
 func (w *wrappedError) Unwrap() error {
 	return w.inner
+}
+
+func New(s string) error {
+	return &wrappedError{
+		inner: errors.New(s),
+	}
 }
