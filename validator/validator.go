@@ -16,7 +16,7 @@ func (v *validator) Valid() bool {
 	return len(v.Errors) == 0
 }
 
-func (v *validator) AddError(key, message string) {
+func (v *validator) Error(key, message string) {
 	if _, exists := v.Errors[key]; !exists {
 		v.Errors[key] = message
 	}
@@ -24,7 +24,7 @@ func (v *validator) AddError(key, message string) {
 
 func (v *validator) Check(ok bool, key, message string) {
 	if !ok {
-		v.AddError(key, message)
+		v.Error(key, message)
 	}
 }
 
