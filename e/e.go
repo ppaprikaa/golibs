@@ -9,7 +9,6 @@ import (
 
 type WalkFunc func(error)
 
-// Wraps given inner error with given outer error
 // error: "outter: inner"
 func WrapErr(outer error, inner error) error {
 	if ErrNotEmpty(outer) && ErrNotEmpty(inner) {
@@ -23,7 +22,6 @@ func WrapErr(outer error, inner error) error {
 	return nil
 }
 
-// Wraps given error with given msg
 // error: "prefix: err"
 func WrapPrefix(p string, err error) error {
 	return WrapErr(errors.New(p), err)
@@ -33,28 +31,16 @@ func Contains(err error, msg string) bool {
 	return len(GetAll(err, msg)) > 0
 }
 
-func ContainsErr(err, target error) bool {
-	return len(GetAllErrs(err, target)) > 0
-}
-
 func ContainsType(err error, v any) bool {
 	return len(GetAllTypes(err, v)) > 0
 }
 
-func GetAll(errs error, msg string) []error {
-	return GetAllErrs(errs, errors.New(msg))
+func ContainsErr(err, target error) bool {
+	return len(GetAllErrs(err, target)) > 0
 }
 
-func GetAllErrs(errs, target error) []error {
-	var res []error
-
-	Walk(errs, func(err error) {
-		if errors.Is(target, err) || target.Error() == err.Error() {
-			res = append(res, err)
-		}
-	})
-
-	return res
+func GetAll(errs error, msg string) []error {
+	return GetAllErrs(errs, errors.New(msg))
 }
 
 func GetAllTypes(err error, v any) []error {
@@ -79,7 +65,18 @@ func GetAllTypes(err error, v any) []error {
 	return res
 }
 
-// Check if error is empty
+func GetAllErrs(errs, target error) []error {
+	var res []error
+
+	Walk(errs, func(err error) {
+		if errors.Is(target, err) || target.Error() == err.Error() {
+			res = append(res, err)
+		}
+	})
+
+	return res
+}
+
 func ErrNotEmpty(err error) bool {
 	var errNotEmpty = err != nil
 
