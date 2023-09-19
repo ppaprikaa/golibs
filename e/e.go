@@ -31,16 +31,16 @@ func Contains(err error, msg string) bool {
 	return len(GetAll(err, msg)) > 0
 }
 
-func ContainsType(err error, v any) bool {
+func ContainsType(err error, v error) bool {
 	return len(GetAllTypes(err, v)) > 0
 }
 
-func ContainsErr(err, target error) bool {
-	return len(GetAllErrs(err, target)) > 0
+func ContainsTargetErr(err, target error) bool {
+	return len(GetAllTargetErrs(err, target)) > 0
 }
 
 func GetAll(errs error, msg string) []error {
-	return GetAllErrs(errs, errors.New(msg))
+	return GetAllTargetErrs(errs, errors.New(msg))
 }
 
 func GetAllTypes(err error, v any) []error {
@@ -65,7 +65,7 @@ func GetAllTypes(err error, v any) []error {
 	return res
 }
 
-func GetAllErrs(errs, target error) []error {
+func GetAllTargetErrs(errs, target error) []error {
 	var res []error
 
 	Walk(errs, func(err error) {
@@ -99,13 +99,10 @@ func Walk(err error, cb WalkFunc) {
 		cb(e.outer)
 		Walk(e.inner, cb)
 	case interface{ Unwrap() []error }:
-		cb(err)
-
 		for _, err := range e.Unwrap() {
 			Walk(err, cb)
 		}
 	case interface{ Unwrap() error }:
-		cb(err)
 		Walk(e.Unwrap(), cb)
 	default:
 		cb(err)
