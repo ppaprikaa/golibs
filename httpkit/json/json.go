@@ -89,7 +89,7 @@ func Read(r *http.Request, dst any) error {
 			return errors.New("empty JSON")
 
 		case errors.As(err, &invalidUnmarshalErr):
-			panic("destination must be non nil pointer")
+			return errors.New("argument must be a non-nil pointer")
 		default:
 			return err
 		}
