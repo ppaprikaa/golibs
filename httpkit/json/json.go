@@ -43,6 +43,10 @@ func Conflict(w http.ResponseWriter, data any) error {
 	return Write(w, http.StatusConflict, data)
 }
 
+func GatewayTimeout(w http.ResponseWriter, data any) error {
+	return Write(w, http.StatusGatewayTimeout, data)
+}
+
 func InternalServerError(w http.ResponseWriter) {
 	w.WriteHeader(500)
 	w.Header().Set("Content-Type", "application/json")
