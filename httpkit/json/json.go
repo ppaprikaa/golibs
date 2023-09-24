@@ -20,7 +20,7 @@ func NewError(Err string) *err {
 }
 
 func (e *err) Error() string {
-	return fmt.Sprintf("{\n\"error\": \"%s\"}\n", e.Err)
+	return fmt.Sprintf("{\n\"error\": \"%s\"\n}\n", e.Err)
 }
 
 func OK(w http.ResponseWriter, data any) error {
@@ -37,6 +37,7 @@ func BadRequest(w http.ResponseWriter, data any) error {
 
 func InternalServerError(w http.ResponseWriter) {
 	w.WriteHeader(500)
+	w.Header().Set("Content-Type", "application/json")
 	_, _ = w.Write([]byte(NewError("internal server error").Error()))
 }
 
